@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id Int @id @default(autoincrement())  //id
+  name String @db.VarChar(32)           //名前
+  grade String @db.VarChar(32)          //学年
+  student_number String @db.VarChar(32) //学籍番号
+  MACAddress String @db.VarChar(32)     //ユーザのMACaddress
+}
+
+model Stayer{
+  id Int @id @default(autoincrement()) //id
+  user_id Int @db.Int                  //user.idからuser情報を参照
+  startTime DateTime @db.Timestamp()   //滞在開始時間
+  endTime DateTime? @db.Timestamp()    //滞在終了時間(任意)
+}

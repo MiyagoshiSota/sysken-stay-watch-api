@@ -1,0 +1,52 @@
+version: '3'
+services:
+  mysql:
+    container_name: sysken_stay_watch_mysql
+    image: mysql:8.0.27
+    platform: linux/x86_64
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sysken_stay_watch_db
+    restart: always
+    networks:
+      - mysql-network
+    volumes:
+      - sysken_stay_watch_db:/var/lib/mysql
+    command: mysqld --innodb_use_native_aio=0
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'mysqladmin',
+          'ping',
+          '-h',
+          'localhost',
+          '-u',
+          'root',
+          '-pmysql',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  api:
+    container_name: sysken_stay_watch_api
+    ports:
+      - '3000:3000'
+    build: ./
+    tty: true
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
+    driver: bridge
+
+volumes:
+  sysken_stay_watch_db:
