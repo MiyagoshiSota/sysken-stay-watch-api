@@ -210,7 +210,7 @@ export class AppController {
 
     //滞在終了時間が12時間前より前かどうかを判定
     const isOlderThan12Hours = (endTime: Date, now: Date): boolean => {
-      const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000); // 12時間前の時刻
+      const twelveHoursAgo = new Date(now.getTime() - 24 * 30 * 60 * 60 * 1000); // 12時間前の時刻
       return endTime <= twelveHoursAgo;
     };
 
