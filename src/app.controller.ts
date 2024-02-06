@@ -208,9 +208,9 @@ export class AppController {
       Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000,
     );
 
-    //滞在終了時間が12時間前より前かどうかを判定
+    //滞在終了時間が720時間前(30日前)より前かどうかを判定
     const isOlderThan12Hours = (endTime: Date, now: Date): boolean => {
-      const twelveHoursAgo = new Date(now.getTime() - 24 * 30 * 60 * 60 * 1000); // 12時間前の時刻
+      const twelveHoursAgo = new Date(now.getTime() - 24 * 30 * 60 * 60 * 1000); // 720時間前(30日前)の時刻
       return endTime <= twelveHoursAgo;
     };
 
