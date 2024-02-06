@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Stayer, User, Prisma } from '@prisma/client';
-import { NULL } from 'sass';
-import { Timestamp } from 'rxjs';
 
 @Injectable()
 export class StayerService {
