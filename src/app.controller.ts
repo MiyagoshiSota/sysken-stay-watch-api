@@ -177,6 +177,8 @@ export class AppController {
         ),
     );
 
+    console.log(NewMACAddresses);
+
     //退出者を出す
     const ExitMACAddresses = OldMACAddress.filter(
       (OldMACAddress) =>
