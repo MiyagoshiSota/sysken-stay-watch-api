@@ -98,7 +98,6 @@ export class AppController {
   }
 
   //滞在履歴を取得(名前、学年、滞在開始時間、滞在終了時間)
-  //{"statusCode":500,"message":"Internal server error"}
   @Get('stayhistory/get')
   async getStayhistory() {
     const stayhistoryData: {
