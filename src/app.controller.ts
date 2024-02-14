@@ -193,9 +193,7 @@ export class AppController {
     NewUserIDs.forEach(async (NewUserID) => {
       await this.stayerService.addStayer({
         user_id: NewUserID.id,
-        startTime: new Date(
-          Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000,
-        ), //日本時間に変換
+        startTime: new Date(), 
         endTime: null,
       });
     });
@@ -212,10 +210,8 @@ export class AppController {
     //滞在履歴の取得(滞在者は含まない)
     const stayer = await this.stayerService.getOldStayersTime();
 
-    //現在時刻の取得(日本時間に変換)
-    const now = new Date(
-      Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000,
-    );
+    //現在時刻の取得
+    const now = new Date();
 
     //滞在終了時間が720時間前より前かどうかを判定
     const isOlderThan12Hours = (endTime: Date, now: Date): boolean => {
