@@ -227,6 +227,8 @@ export class AppController {
       }
     });
 
+    console.log("success arp !");
+
     return requestBody;
   }
 }
