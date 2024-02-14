@@ -73,9 +73,7 @@ export class UserService {
   async getUserID(MACAddresses: string[]): Promise<{ id: number }[]> {
     return this.prisma.user.findMany({
       where: {
-        MACAddress: {
-          in: MACAddresses,
-        },
+        MACAddress: { in: MACAddresses}
       },
       select: {
         id: true,
