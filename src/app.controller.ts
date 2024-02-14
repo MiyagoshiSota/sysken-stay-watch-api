@@ -157,6 +157,7 @@ export class AppController {
   //入退室者を更新する
   @Post('register/set')
   async setMACaddresses(@Body() requestBody: { MACAddresses: string[] }) {
+    console.log(requestBody);
     /* 入室者と退室者の判定と更新 */
     //ARPサーバから送られてきたMACAddressを配列に格納
     const NowMACAddresses = requestBody.MACAddresses;
@@ -226,8 +227,6 @@ export class AppController {
         await this.stayerService.deleteStayer(stayer.id);
       }
     });
-
-    console.log("success arp !");
 
     return requestBody;
   }
