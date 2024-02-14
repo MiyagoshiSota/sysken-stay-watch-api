@@ -157,7 +157,7 @@ export class AppController {
   //入退室者を更新する
   @Post('register/set')
   async setMACaddresses(@Body() requestBody: { MACAddresses: string[] }) {
-    console.log("Request:" + requestBody);
+    console.log(requestBody);
     /* 入室者と退室者の判定と更新 */
     //ARPサーバから送られてきたMACAddressを配列に格納
     const NowMACAddresses = requestBody.MACAddresses;
@@ -177,7 +177,7 @@ export class AppController {
         ),
     );
 
-    console.log("NewMACAddresses:" + NewMACAddresses);
+    console.log(NewMACAddresses);
 
     //退出者を出す
     const ExitMACAddresses = OldMACAddress.filter(
@@ -189,7 +189,7 @@ export class AppController {
 
     //NewMACAddresses内のMACAddressから、滞在者情報をstayersテーブルに格納
     const NewUserIDs = await this.userService.getUserID(NewMACAddresses);
-    console.log("addNewStayerID" + NewUserIDs);
+    console.log(NewUserIDs);
     NewUserIDs.forEach(async (NewUserID) => {
       await this.stayerService.addStayer({
         user_id: NewUserID.id,
