@@ -189,6 +189,7 @@ export class AppController {
 
     //NewMACAddresses内のMACAddressから、滞在者情報をstayersテーブルに格納
     const NewUserIDs = await this.userService.getUserID(NewMACAddresses);
+    console.log(NewUserIDs);
     NewUserIDs.forEach(async (NewUserID) => {
       await this.stayerService.addStayer({
         user_id: NewUserID.id,
