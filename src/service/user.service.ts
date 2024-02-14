@@ -40,7 +40,7 @@ export class UserService {
   //滞在者情報を取得(名前と学年を取得)
   async getStayersInfo(
     user_id: number[],
-  ): Promise<{ name: string; grade: string }[]> {
+  ): Promise<{ id:number; name: string; grade: string }[]> {
     return this.prisma.user.findMany({
       where: {
         id: {
@@ -48,6 +48,7 @@ export class UserService {
         },
       },
       select: {
+        id: true,
         name: true,
         grade: true,
       },

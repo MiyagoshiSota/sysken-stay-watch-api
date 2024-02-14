@@ -22,7 +22,13 @@ export class AppController {
   //ユーザの全情報を取得
   @Get('users/get')
   async getUsers() {
-    const stayersData: { id: number; name: string; grade: string; student_number: string; MACAddress: string; }[] = await this.userService.getUsers();
+    const stayersData: {
+      id: number;
+      name: string;
+      grade: string;
+      student_number: string;
+      MACAddress: string;
+    }[] = await this.userService.getUsers();
     const returnData = {
       users: stayersData,
     };
@@ -69,13 +75,13 @@ export class AppController {
 
     //stayersDataのuser_idから現在の滞在者情報(名前、学年)を取得
     const stayersID: number[] = stayersData.map((stayer) => stayer.user_id);
-    const stayersInfo: { name: string; grade: string }[] =
+    const stayersInfo: { id: number; name: string; grade: string }[] =
       await this.userService.getStayersInfo(stayersID);
 
     //stayersDataとstayersInfoを結合し整形
-    const stayers = stayersData.map((stayer) => {
-      const stayerInfo = stayersInfo.find(
-        (stayerInfo) => stayerInfo.name === stayerInfo.name,
+    const stayers = stayersInfo.map((stayerInfo) => {
+      const stayer = stayersData.find(
+        (stayer) => stayer.user_id === stayerInfo.id,
       );
       return {
         name: stayerInfo.name,
@@ -92,6 +98,7 @@ export class AppController {
   }
 
   //滞在履歴を取得(名前、学年、滞在開始時間、滞在終了時間)
+  //{"statusCode":500,"message":"Internal server error"}
   @Get('stayhistory/get')
   async getStayhistory() {
     const stayhistoryData: {
@@ -103,13 +110,13 @@ export class AppController {
 
     //stayhistoryDataのuser_idから滞在者情報(名前、学年)を取得
     const stayersID: number[] = stayhistoryData.map((stayer) => stayer.user_id);
-    const stayersInfo: { name: string; grade: string }[] =
+    const stayersInfo: { id: number; name: string; grade: string }[] =
       await this.userService.getStayersInfo(stayersID);
 
     //stayhistoryDataとstayersInfoを結合し整形
-    const stayhistory = stayhistoryData.map((stayer) => {
-      const stayerInfo = stayersInfo.find(
-        (stayerInfo) => stayerInfo.name === stayerInfo.name,
+    const stayhistory = stayersInfo.map((stayerInfo) => {
+      const stayer = stayhistoryData.find(
+        (stayer) => stayer.user_id === stayerInfo.id,
       );
       return {
         name: stayerInfo.name,
@@ -118,8 +125,6 @@ export class AppController {
         endTime: stayer.endTime,
       };
     });
-
-    console.log(stayhistory);
 
     const returnData = {
       history: stayhistory,
