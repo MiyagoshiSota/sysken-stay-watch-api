@@ -13,6 +13,7 @@ export class UserService {
 
   //ユーザ登録メソッド(id、名前、学年、学籍番号、MACaddressをDBに登録)
   async addUser(data: Prisma.UserCreateInput): Promise<User> {
+    console.log("add name:" + data.name + " grade:" + data.grade + " student_number:" + data.student_number + " MACAddress:" + data.MACAddress);
     return this.prisma.user.create({
       data,
     });
@@ -20,7 +21,7 @@ export class UserService {
 
   //ユーザ削除メソッド(idを指定しDBから削除)
   async deleteUser(id: number): Promise<User> {
-    console.log(id);
+    console.log("delete:" + id);
     return this.prisma.user.delete({
       where: { id: id },
     });
