@@ -8,7 +8,9 @@ import { json } from 'stream/consumers';
 
 @Controller('api')
 export class AppController {
-  private arpList:{ MACAddresses: string[]; };
+  private MACList:{ MACAddresses: string[]; };
+  private getarpTime: Date;
+  private arpList: { MACAddresses: string[]; GetTime: Date};
 
   constructor(
     private readonly appService: AppService,
@@ -160,7 +162,9 @@ export class AppController {
   @Post('register/set')
   async setMACaddresses(@Body() requestBody: { MACAddresses: string[] }) {
     console.log(requestBody);
-    this.arpList = requestBody;
+    this.MACList = requestBody;
+    this.getarpTime = new Date();
+
     /* 入室者と退室者の判定と更新 */
     //ARPサーバから送られてきたMACAddressを配列に格納
     const NowMACAddresses = requestBody.MACAddresses;
@@ -233,8 +237,9 @@ export class AppController {
     return requestBody;
   }
 
+  //ARPサーバから受け取ったMACアドレスを返す
   @Get('arp/get')
-  async getARP(): Promise<{ MACAddresses: string[] }> {
-    return this.arpList;
+  async getARP(): Promise<{ MACAddresses: string[]; GetTime: Date}> {
+    return { MACAddresses: this.MACList.MACAddresses, GetTime: this.getarpTime };
   }
 }
