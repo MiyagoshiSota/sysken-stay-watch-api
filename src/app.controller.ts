@@ -234,7 +234,7 @@ export class AppController {
   }
 
   @Get('arp/get')
-  async getARP() {
-    return JSON.parse(JSON.stringify(this.arpList));
+  async getARP(): Promise<{ MACAddresses: string[] }> {
+    return this.arpList;
   }
 }
