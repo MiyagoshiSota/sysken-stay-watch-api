@@ -8,9 +8,9 @@ import { json } from 'stream/consumers';
 
 @Controller('api')
 export class AppController {
-  private MACList:{ MACAddresses: string[]; };
+  private MACList: { MACAddresses: string[] };
   private getarpTime: Date;
-  private arpList: { MACAddresses: string[]; GetTime: Date};
+  private arpList: { MACAddresses: string[]; GetTime: Date };
 
   constructor(
     private readonly appService: AppService,
@@ -112,23 +112,30 @@ export class AppController {
       endTime: Date;
     }[] = await this.stayerService.getOldStayersTime();
 
+    console.log(stayhistoryData.length);
+
     //stayhistoryDataのuser_idから滞在者情報(名前、学年)を取得
     const stayersID: number[] = stayhistoryData.map((stayer) => stayer.user_id);
     const stayersInfo: { id: number; name: string; grade: string }[] =
       await this.userService.getStayersInfo(stayersID);
 
     //stayhistoryDataとstayersInfoを結合し整形
-    const stayhistory = stayersInfo.map((stayerInfo) => {
-      const stayer = stayhistoryData.find(
-        (stayer) => stayer.user_id === stayerInfo.id,
+    const stayhistory_null = stayhistoryData.map((stayer) => {
+      const stayerInfo = stayersInfo.find(
+        (stayerInfo) => stayer.user_id === stayerInfo.id,
       );
-      return {
-        name: stayerInfo.name,
-        grade: stayerInfo.grade,
-        startTime: stayer.startTime,
-        endTime: stayer.endTime,
-      };
+      if(stayerInfo != undefined){
+        return {
+          name: stayerInfo.name,
+          grade: stayerInfo.grade,
+          startTime: stayer.startTime,
+          endTime: stayer.endTime,
+        };
+      }
     });
+
+    //nullを削除
+    const stayhistory = stayhistory_null.filter((stayer) => stayer != undefined);
 
     const returnData = {
       history: stayhistory,
@@ -200,7 +207,7 @@ export class AppController {
     NewUserIDs.forEach(async (NewUserID) => {
       await this.stayerService.addStayer({
         user_id: NewUserID.id,
-        startTime: new Date(), 
+        startTime: new Date(),
         endTime: null,
       });
     });
@@ -239,7 +246,10 @@ export class AppController {
 
   //ARPサーバから受け取ったMACアドレスを返す
   @Get('arp/get')
-  async getARP(): Promise<{ MACAddresses: string[]; GetTime: Date}> {
-    return { MACAddresses: this.MACList.MACAddresses, GetTime: this.getarpTime };
+  async getARP(): Promise<{ MACAddresses: string[]; GetTime: Date }> {
+    return {
+      MACAddresses: this.MACList.MACAddresses,
+      GetTime: this.getarpTime,
+    };
   }
 }
