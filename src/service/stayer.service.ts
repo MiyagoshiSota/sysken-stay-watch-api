@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Stayer, User, Prisma } from '@prisma/client';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class StayerService {
   constructor(private prisma: PrismaService) {}
 
   //滞在者を取得
-  async getNowStayersTime(): Promise<{  user_id: number; startTime: Date  }[]> {
+  async getNowStayersTime(): Promise<{ user_id: number; startTime: Date }[]> {
     return this.prisma.stayer.findMany({
       where: {
         endTime: null,
@@ -20,7 +21,9 @@ export class StayerService {
   }
 
   //滞在履歴を取得
-  async getOldStayersTime(): Promise<{ id:number;  user_id: number; startTime: Date; endTime: Date  }[]> {
+  async getOldStayersTime(): Promise<
+    { id: number; user_id: number; startTime: Date; endTime: Date }[]
+  > {
     return this.prisma.stayer.findMany({
       where: {
         endTime: { not: null },
@@ -59,13 +62,23 @@ export class StayerService {
     });
   }
 
-  //滞在者情報の削除
+  //滞在者情報の削除(id指定)
   async deleteStayer(id: number): Promise<Stayer> {
     return this.prisma.stayer.delete({
       where: {
         id: id,
       },
     });
+  }
+
+  //滞在者情報の削除(user_id指定)
+  async deleteStayerByUserID(id: number): Promise<{  }> {
+    const deletedUserCount = await this.prisma.stayer.deleteMany({
+      where: {
+        user_id: id,
+      },
+    });
+    return deletedUserCount;
   }
 
   //endTimeの複数更新

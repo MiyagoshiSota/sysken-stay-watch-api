@@ -69,6 +69,7 @@ export class AppController {
     @Body()
     { user: { id } },
   ): Promise<UserModel> {
+    this.stayerService.deleteStayerByUserID(+id);
     return this.userService.deleteUser(+id);
   }
 
