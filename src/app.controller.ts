@@ -4,10 +4,11 @@ import { User as UserModel } from '@prisma/client';
 import { AppService } from './app.service';
 import { Stayer as StayerModel } from '@prisma/client';
 import { StayerService } from './service/stayer.service';
+import { json } from 'stream/consumers';
 
 @Controller('api')
 export class AppController {
-  private arpList = [];
+  private arpList:{ MACAddresses: string[]; };
 
   constructor(
     private readonly appService: AppService,
@@ -159,7 +160,7 @@ export class AppController {
   @Post('register/set')
   async setMACaddresses(@Body() requestBody: { MACAddresses: string[] }) {
     console.log(requestBody);
-    this.arpList = requestBody.MACAddresses;
+    this.arpList = requestBody;
     /* 入室者と退室者の判定と更新 */
     //ARPサーバから送られてきたMACAddressを配列に格納
     const NowMACAddresses = requestBody.MACAddresses;
@@ -234,6 +235,6 @@ export class AppController {
 
   @Get('arp/get')
   async getARP() {
-    return this.arpList;
+    return JSON.parse(JSON.stringify(this.arpList));
   }
 }
