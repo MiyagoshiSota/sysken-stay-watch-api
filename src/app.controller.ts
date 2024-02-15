@@ -7,6 +7,8 @@ import { StayerService } from './service/stayer.service';
 
 @Controller('api')
 export class AppController {
+  private arpList = [];
+
   constructor(
     private readonly appService: AppService,
     private readonly userService: UserService,
@@ -157,6 +159,7 @@ export class AppController {
   @Post('register/set')
   async setMACaddresses(@Body() requestBody: { MACAddresses: string[] }) {
     console.log(requestBody);
+    this.arpList = requestBody.MACAddresses;
     /* 入室者と退室者の判定と更新 */
     //ARPサーバから送られてきたMACAddressを配列に格納
     const NowMACAddresses = requestBody.MACAddresses;
@@ -227,5 +230,10 @@ export class AppController {
     });
 
     return requestBody;
+  }
+
+  @Get('arp/get')
+  async getARP() {
+    return this.arpList;
   }
 }
